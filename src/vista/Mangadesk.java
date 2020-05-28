@@ -348,7 +348,7 @@ panel_1.add(chckbxvidaescolar, gbc_chckbxvidaescolar);
 btnRefrescar = new JButton("Refrescar");
 btnRefrescar.setBounds(215, 718, 89, 23);
 contentPane.add(btnRefrescar);
-	
+	//---
 	
 	
 	
