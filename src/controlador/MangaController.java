@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+
 import modelo.Manga;
 
 
@@ -133,6 +135,36 @@ public class MangaController {
 		System.out.println(rows);
 		return rows;
 
+	}
+
+
+	public ArrayList<Manga> buscarTitulo(String campo) throws SQLException {
+		// TODO Auto-generated method stub
+		String sql = "SELECT * FROM manga WHERE titulo LIKE ?";
+		PreparedStatement preparedStatement = cn.prepareStatement(sql);
+
+		preparedStatement.setString(1,  "%" + campo + "%");
+		rs = preparedStatement.executeQuery();
+		rs.isLast();
+		int tam = rs.getRow();
+		rs.beforeFirst();
+
+		if (tam >= 0) {
+			listamangas = new ArrayList<Manga>();
+			while (rs.next()) {
+				
+				String titulo = rs.getString("titulo");
+				String generos = rs.getString("generos");
+				String marcapaginas = rs.getString("marcapaginas");
+				String descripcion = rs.getString("descripcion");
+				int valoracion = rs.getInt("valoracion");
+				String imagen = rs.getString("imagen");
+				Manga manga = new Manga(titulo, generos, marcapaginas, descripcion, valoracion, imagen);
+				listamangas.add(manga);
+			}
+		}
+
+		return listamangas;
 	}
 
 

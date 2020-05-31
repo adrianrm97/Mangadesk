@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -45,7 +46,8 @@ public class UsuarioFrame extends JFrame {
 	private JButton btnguardar;
 	private JTextArea textAreadescripcion;
 	private MangaController Escaparate = null;
-
+	
+	
 	/**
 	 * Create the frame.
 	 * @param nuevo 
@@ -168,8 +170,11 @@ public class UsuarioFrame extends JFrame {
 					Escaparate.abrirConexion();
 					System.out.println(titulo);
 					Escaparate.GuardarCambios(titulo,generos,marcapaginas,valoracion,descripcion);
+					
 					Escaparate.consultaMangasPst("SELECT * FROM manga");
+					
 					Escaparate.cerrarConexion();
+					
 				} catch (SQLException | ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

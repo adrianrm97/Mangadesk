@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.ComponentOrientation;
 
 import javax.swing.JRadioButtonMenuItem;
@@ -80,6 +81,7 @@ public class Mangadesk extends JFrame implements ActionListener  {
 	//private Manga[] cincoMangas = new Manga[5];
 	private JButton btnRefrescar;
 	
+	
 	/**
 	 * Create the frame.
 	 */
@@ -116,18 +118,44 @@ public class Mangadesk extends JFrame implements ActionListener  {
 
 	private void definirEventos() {
 		// TODO Auto-generated method stub
+		
+		////BUSCAR POR TITULO //////////////////////////////////////////////
 		textFieldBuscar.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					System.out.println(textFieldBuscar.getText());
+				listaMangas = null;
+				String titulo = "";
+				titulo = textFieldBuscar.getText();
+				if (!titulo.isEmpty()) {
+					try {
+						Escaparate.abrirConexion();
+						listaMangas = Escaparate.buscarTitulo(titulo);
+						Escaparate.cerrarConexion();
+					} catch (SQLException | ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}else {
+					try {
+						Escaparate.abrirConexion();
+						listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga");
+						Escaparate.cerrarConexion();
+					} catch (SQLException | ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				muestraMangas(listaMangas);
 					//String titulo = "";
 					//Mandar a metodo BuscarTitulo(titulo);
 				}
 				
 			}
-		});//buscar
+		});//buscar por titulo //////////////////////////////////////////////
 		
+		////ADMINISTRACION //////////////////////////////////////////////
 		btnadministrar.addActionListener(new ActionListener() {
 			
 			@Override
@@ -135,8 +163,9 @@ public class Mangadesk extends JFrame implements ActionListener  {
 				// TODO Auto-generated method stub
 				AdministradorFrame admin = new AdministradorFrame();
 			}
-		});//administrar
+		});//administrar //////////////////////////////////////////////
 		
+		//// APLICAR FILTROS //////////////////////////////////////////////
 		btnaplicarfiltros.addActionListener(new ActionListener() {
 			//AQUI ES DONDE VAMOS A MANDAR TODA LA INFORMACIÓN A LOS MÉTODOS QUE BUSCAN POR FILTROS.
 			@Override
@@ -157,9 +186,9 @@ public class Mangadesk extends JFrame implements ActionListener  {
 				mangasFiltrados = Escaparate.muestraFiltrados(tipo,generos);
 				
 			}//FIN ACTIONPERFORMED
-		});//aplicar
+		});//aplicar //////////////////////////////////////////////
 		
-		
+		//// REFRESCAR LISTA //////////////////////////////////////////////
 		btnRefrescar.addActionListener(new ActionListener() {
 			
 			@Override
@@ -174,7 +203,7 @@ public class Mangadesk extends JFrame implements ActionListener  {
 					e1.printStackTrace();
 				}
 			}
-		});
+		});////FIN REFRESCAR //////////////////////////////////////////////
 	}//fin definir eventos
 
 	private void definirVentana() {
@@ -187,33 +216,7 @@ public class Mangadesk extends JFrame implements ActionListener  {
 		panelMangas.setLayout(new GridLayout((labels.size()/5),5,2,2));
 		
 		//imagen
-		
-		int cantidadMangas = listaMangas.size();
-		
-		//FOR IMAGENES DEL OBJETO MANGA
-		for (int i = 0; i < listaMangas.size(); i++) {
-			ImageIcon imagen = new ImageIcon(listaMangas.get(i).getImagen());
-			Image ImagenBien = imagen.getImage();
-			Image newimg = ImagenBien.getScaledInstance(200, 250, java.awt.Image.SCALE_SMOOTH);
-			imagen = new ImageIcon(newimg);
-			//fin imagen
-			
-			
-			mangaBoton = new JButton(imagen);
-			mangaBoton.setOpaque(false);
-			mangaBoton.setForeground(Color.white);
-			mangaBoton.setBorderPainted(false);
-			mangaBoton.setFocusPainted(false);
-			mangaBoton.setContentAreaFilled(false);
-			mangaBoton.putClientProperty("libro", listaMangas.get(i));
-			panelMangas.add(mangaBoton);
-			
-			mangaBoton.addActionListener(this);
-			
-				
-			
-			
-		}//FIN DEL FOR
+		muestraMangas(listaMangas);
 		
 		
 		
@@ -361,6 +364,65 @@ contentPane.add(btnRefrescar);
 	
 	}
 
+	private void muestraMangas(ArrayList<Manga> listaMangas) {
+		// TODO Auto-generated method stub
+		int cantidadMangas = listaMangas.size();
+		//Get the components in the panel
+		Component[] componentList = panelMangas.getComponents();
+
+		//Loop through the components
+		for(Component c : componentList){
+
+		    //Find the components you want to remove
+		    if(c instanceof JButton){
+
+		        //Remove it
+		        panelMangas.remove(c);
+		    }
+		}
+
+	
+		//FOR IMAGENES DEL OBJETO MANGA
+		for (int i = 0; i < listaMangas.size(); i++) {
+			
+			ImageIcon imagen = new ImageIcon(listaMangas.get(i).getImagen());
+			Image ImagenBien = imagen.getImage();
+			Image newimg = ImagenBien.getScaledInstance(200, 250, java.awt.Image.SCALE_SMOOTH);
+			imagen = new ImageIcon(newimg);
+			//fin imagen
+			
+			
+			mangaBoton = new JButton(imagen);
+			mangaBoton.setOpaque(false);
+			mangaBoton.setForeground(Color.white);
+			mangaBoton.setBorderPainted(false);
+			mangaBoton.setFocusPainted(false);
+			mangaBoton.setContentAreaFilled(false);
+			mangaBoton.putClientProperty("libro", listaMangas.get(i));
+			panelMangas.add(mangaBoton);
+			
+			mangaBoton.addActionListener(this);
+			
+			
+			panelMangas.revalidate();
+			panelMangas.repaint();
+			panelMangas.validate();
+			
+		}//FIN DEL FOR
+		
+	}
+
+	public void actualizar() {
+		try {
+			
+			Escaparate.abrirConexion();
+			listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga");
+			Escaparate.cerrarConexion();
+		} catch (SQLException | ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
