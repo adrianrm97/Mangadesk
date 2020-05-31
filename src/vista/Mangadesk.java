@@ -55,7 +55,7 @@ public class Mangadesk extends JFrame implements ActionListener  {
 	private JTextField textFieldBuscar;
 	private JButton btnadministrar;
 	private JButton btnaplicarfiltros;
-	private ButtonGroup tipo = new ButtonGroup();
+
 	private JRadioButton rdbtnmanga;
 	private JRadioButton rdbtnmanhwa;
 	private JRadioButton rdbtnmanhua;
@@ -78,8 +78,6 @@ public class Mangadesk extends JFrame implements ActionListener  {
 	private JButton mangaBoton;
 	private JLabel lblMangaDisplay2;
 	private ArrayList<Manga> mangasFiltrados = null;
-	//private Manga[] cincoMangas = new Manga[5];
-	private JButton btnRefrescar;
 	
 	
 	/**
@@ -189,21 +187,7 @@ public class Mangadesk extends JFrame implements ActionListener  {
 		});//aplicar //////////////////////////////////////////////
 		
 		//// REFRESCAR LISTA //////////////////////////////////////////////
-		btnRefrescar.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				try {
-					Escaparate.abrirConexion();
-					listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga");
-					Escaparate.cerrarConexion();
-				} catch (SQLException | ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});////FIN REFRESCAR //////////////////////////////////////////////
+
 	}//fin definir eventos
 
 	private void definirVentana() {
@@ -254,7 +238,6 @@ public class Mangadesk extends JFrame implements ActionListener  {
 		rdbtnmanhua = new JRadioButton("Manhua");
 		rdbtnmanhua.setBounds(6, 94, 81, 23);
 		panelCentral.add(rdbtnmanhua);
-		tipo.add(rdbtnmanga);tipo.add(rdbtnmanhwa);tipo.add(rdbtnmanhua);
 		tipos.add(rdbtnmanga);tipos.add(rdbtnmanhua);tipos.add(rdbtnmanhwa);
 JPanel panel_1 = new JPanel();
 panel_1.setBorder(new TitledBorder(null, "G\u00E9neros", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -273,7 +256,7 @@ gbc_chckbxaccion.insets = new Insets(0, 0, 5, 0);
 gbc_chckbxaccion.gridx = 0;
 gbc_chckbxaccion.gridy = 0;
 panel_1.add(chckbxaccion, gbc_chckbxaccion);
-JCheckBox chckbxdeportes = new JCheckBox("Deportes");
+chckbxdeportes = new JCheckBox("Deportes");
 chckbxdeportes.setHorizontalAlignment(SwingConstants.LEFT);
 GridBagConstraints gbc_chckbxdeportes = new GridBagConstraints();
 gbc_chckbxdeportes.insets = new Insets(0, 0, 5, 0);
@@ -348,9 +331,6 @@ panel_1.add(chckbxvidaescolar, gbc_chckbxvidaescolar);
 	checkBoxSeleccionados.add(chckbxrecuentos);checkBoxSeleccionados.add(chckbxromance);checkBoxSeleccionados.add(chckbxsupervivencia);
 	checkBoxSeleccionados.add(chckbxthriller);checkBoxSeleccionados.add(chckbxvidaescolar);checkBoxSeleccionados.add(chckbxaccion);
 	checkBoxSeleccionados.add(chckbxdrama);checkBoxSeleccionados.add(chckbxmagia);
-btnRefrescar = new JButton("Refrescar");
-btnRefrescar.setBounds(215, 718, 89, 23);
-contentPane.add(btnRefrescar);
 	//---
 	
 	

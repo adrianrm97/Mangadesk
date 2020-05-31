@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -19,12 +20,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
 import controlador.MangaController;
+import javax.swing.JRadioButton;
 
 public class AdministradorFrame extends JFrame {
 
@@ -44,7 +47,10 @@ public class AdministradorFrame extends JFrame {
 	private JButton btnguardar;
 	private JTextArea textAreadescripcion;
 	private MangaController Escaparate = null;
-	private JTextField textFieldtipo;
+	private ArrayList<JRadioButton> radiotipo = new ArrayList<JRadioButton>();
+	private JRadioButton rdbtnManga;
+	private JRadioButton rdbtnManhua;
+	private JRadioButton rdbtnManhwa;
 	/**
 	 * Create the frame.
 	 */
@@ -107,7 +113,12 @@ public class AdministradorFrame extends JFrame {
 				String generos = textFieldgeneros.getText();
 				String marcapaginas = textFieldmarcapaginas.getText();
 				int valoracion = Integer.parseInt(textFieldvaloracion.getText());
-				String tipo = textFieldtipo.getText();
+				String tipo = "";
+				for (JRadioButton jRadioButton : radiotipo) {
+					if (jRadioButton.isSelected()) {
+						tipo = jRadioButton.getText();
+					}
+				}
 				String descripcion = textAreadescripcion.getText();
 				String imagen = rutaimagen;
 				try {
@@ -119,7 +130,8 @@ public class AdministradorFrame extends JFrame {
 						textFieldmarcapaginas.setText("");
 						textFieldvaloracion.setText("");
 						lblimagen.setIcon(null);
-						textFieldtipo.setText("");
+						
+						
 					}
 					
 				} catch (SQLException e1) {
@@ -208,9 +220,17 @@ public class AdministradorFrame extends JFrame {
 		lblNewLabel.setBounds(220, 229, 46, 14);
 		contentPane.add(lblNewLabel);
 		
-		textFieldtipo = new JTextField();
-		textFieldtipo.setBounds(297, 226, 86, 20);
-		contentPane.add(textFieldtipo);
-		textFieldtipo.setColumns(10);
+		rdbtnManga = new JRadioButton("Manga");
+		rdbtnManga.setBounds(297, 225, 71, 23);
+		contentPane.add(rdbtnManga);
+		
+		rdbtnManhwa = new JRadioButton("Manhwa");
+		rdbtnManhwa.setBounds(370, 225, 79, 23);
+		contentPane.add(rdbtnManhwa);
+		
+		rdbtnManhua = new JRadioButton("Manhua");
+		rdbtnManhua.setBounds(451, 225, 71, 23);
+		contentPane.add(rdbtnManhua);
+		radiotipo.add(rdbtnManga); radiotipo.add(rdbtnManhua);radiotipo.add(rdbtnManhwa);
 	}
 }

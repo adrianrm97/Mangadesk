@@ -8,20 +8,11 @@ public class Manga {
 	private String descripcion;
 	private int valoracion;
 	private String imagen;
+	private String tipo;
 	public Manga() {
 		// TODO Auto-generated constructor stub
 	}
-	public Manga(String titulo, String autor, String generos, String marcapaginas, String descripcion, int valoracion,
-			String imagen) {
-		super();
-		this.titulo = titulo;
-		this.autor = autor;
-		this.generos = generos;
-		this.marcapaginas = marcapaginas;
-		this.descripcion = descripcion;
-		this.valoracion = valoracion;
-		this.imagen = imagen;
-	}
+
 	public Manga(String titulo, String generos, String marcapaginas, String descripcion, int valoracion,
 			String imagen) {
 		super();
@@ -32,6 +23,28 @@ public class Manga {
 		this.valoracion = valoracion;
 		this.imagen = imagen;
 	}
+	
+	
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public Manga(String titulo, String generos, String marcapaginas, String descripcion, int valoracion,
+			String imagen, String tipo) {
+		super();
+		this.titulo = titulo;
+		this.generos = generos;
+		this.marcapaginas = marcapaginas;
+		this.descripcion = descripcion;
+		this.valoracion = valoracion;
+		this.imagen = imagen;
+		this.tipo = tipo;
+	}
+
 	public String getTitulo() {
 		return titulo;
 	}
@@ -97,13 +110,13 @@ public class Manga {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
-		return "Manga [titulo=" + titulo + ", autor=" + autor + ", generos=" + generos + ", marcapaginas="
-				+ marcapaginas + ", descripcion=" + descripcion + ", valoracion=" + valoracion + ", imagen=" + imagen
-				+ "]";
+		return "Manga [titulo=" + titulo + ", generos=" + generos + ", marcapaginas=" + marcapaginas + ", descripcion="
+				+ descripcion + ", valoracion=" + valoracion + ", imagen=" + imagen + ", tipo=" + tipo + "]";
 	}
-
+	
 	
 	
 }

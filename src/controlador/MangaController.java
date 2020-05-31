@@ -52,7 +52,8 @@ public class MangaController {
 				String descripcion = rs.getString("descripcion");
 				int valoracion = rs.getInt("valoracion");
 				String imagen = rs.getString("imagen");
-				Manga nuevoManga = new Manga(titulo, generos, marcapaginas, descripcion, valoracion, imagen);
+				String tipo = rs.getString("tipo");	
+				Manga nuevoManga = new Manga(titulo, generos, marcapaginas, descripcion, valoracion, imagen, tipo);
 				mangas.add(nuevoManga);
 				nuevoManga = null;
 			}
@@ -159,7 +160,8 @@ public class MangaController {
 				String descripcion = rs.getString("descripcion");
 				int valoracion = rs.getInt("valoracion");
 				String imagen = rs.getString("imagen");
-				Manga manga = new Manga(titulo, generos, marcapaginas, descripcion, valoracion, imagen);
+				String tipo = rs.getString("tipo");
+				Manga manga = new Manga(titulo, generos, marcapaginas, descripcion, valoracion, imagen,tipo);
 				listamangas.add(manga);
 			}
 		}

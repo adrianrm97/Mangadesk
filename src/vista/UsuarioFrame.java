@@ -1,6 +1,7 @@
 package vista;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -26,6 +27,7 @@ import javax.swing.border.TitledBorder;
 
 import controlador.MangaController;
 import modelo.Manga;
+import javax.swing.SwingConstants;
 
 public class UsuarioFrame extends JFrame {
 
@@ -46,7 +48,9 @@ public class UsuarioFrame extends JFrame {
 	private JButton btnguardar;
 	private JTextArea textAreadescripcion;
 	private MangaController Escaparate = null;
-	
+	private JLabel lblexito;
+	private JLabel lbltipo;
+	private JTextField textFieldtipo;
 	
 	/**
 	 * Create the frame.
@@ -93,6 +97,7 @@ public class UsuarioFrame extends JFrame {
 		textFieldtitulo.setColumns(10);
 		
 		textFieldgeneros = new JTextField();
+		textFieldgeneros.setEditable(false);
 		textFieldgeneros.setBounds(297, 83, 418, 20);
 		contentPane.add(textFieldgeneros);
 		textFieldgeneros.setColumns(10);
@@ -124,12 +129,12 @@ public class UsuarioFrame extends JFrame {
 		textFieldmarcapaginas.setColumns(10);
 		
 		JLabel lbldescripcion = new JLabel("Descripcion:");
-		lbldescripcion.setBounds(206, 231, 79, 14);
+		lbldescripcion.setBounds(206, 256, 79, 14);
 		contentPane.add(lbldescripcion);
 		
 		textAreadescripcion = new JTextArea();
 		textAreadescripcion.setLineWrap(true);
-		textAreadescripcion.setBounds(297, 226, 429, 126);
+		textAreadescripcion.setBounds(297, 251, 429, 126);
 		contentPane.add(textAreadescripcion);
 		
 		JPanel panel = new JPanel();
@@ -141,7 +146,15 @@ public class UsuarioFrame extends JFrame {
 		btnguardar.setBounds(762, 369, 89, 23);
 		contentPane.add(btnguardar);
 		
+		lbltipo = new JLabel("Tipo");
+		lbltipo.setBounds(206, 224, 60, 14);
+		contentPane.add(lbltipo);
 		
+		textFieldtipo = new JTextField();
+		textFieldtipo.setEditable(false);
+		textFieldtipo.setBounds(297, 221, 99, 20);
+		contentPane.add(textFieldtipo);
+		textFieldtipo.setColumns(10);
 		
 		
 		textFieldtitulo.setText(nuevo.getTitulo());
@@ -149,6 +162,13 @@ public class UsuarioFrame extends JFrame {
 		textFieldmarcapaginas.setText(nuevo.getMarcapaginas());
 		textFieldvaloracion.setText(nuevo.getValoracion()+"");
 		textAreadescripcion.setText(nuevo.getDescripcion());
+		textFieldtipo.setText(nuevo.getTipo());
+		lblexito = new JLabel("");
+		lblexito.setHorizontalAlignment(SwingConstants.CENTER);
+		lblexito.setBounds(297, 404, 429, 14);
+		contentPane.add(lblexito);
+		
+	
 		
 	}
 
@@ -165,6 +185,7 @@ public class UsuarioFrame extends JFrame {
 				String marcapaginas = textFieldmarcapaginas.getText();
 				int valoracion = Integer.parseInt(textFieldvaloracion.getText());
 				String descripcion = textAreadescripcion.getText();
+				
 			
 				try {
 					Escaparate.abrirConexion();
@@ -172,7 +193,9 @@ public class UsuarioFrame extends JFrame {
 					Escaparate.GuardarCambios(titulo,generos,marcapaginas,valoracion,descripcion);
 					
 					Escaparate.consultaMangasPst("SELECT * FROM manga");
-					
+					lblexito.setText("Información modificada con éxito");
+					lblexito.setForeground(Color.green.darker());
+				 
 					Escaparate.cerrarConexion();
 					
 				} catch (SQLException | ClassNotFoundException e1) {
