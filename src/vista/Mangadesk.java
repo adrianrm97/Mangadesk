@@ -59,6 +59,7 @@ public class Mangadesk extends JFrame implements ActionListener  {
 	private JRadioButton rdbtnmanga;
 	private JRadioButton rdbtnmanhwa;
 	private JRadioButton rdbtnmanhua;
+	private ButtonGroup grupoBotones = new ButtonGroup();
 	ArrayList<JRadioButton> tipos = new ArrayList<JRadioButton>();
 	private JCheckBox chckbxaccion;
 	private JCheckBox chckbxmagia;
@@ -78,8 +79,9 @@ public class Mangadesk extends JFrame implements ActionListener  {
 	private JButton mangaBoton;
 	private JLabel lblMangaDisplay2;
 	private ArrayList<Manga> mangasFiltrados = null;
-	
-	
+	private JButton btnanterior;
+	private JButton btnsiguiente;
+	private int offset = 0;
 	/**
 	 * Create the frame.
 	 */
@@ -99,7 +101,7 @@ public class Mangadesk extends JFrame implements ActionListener  {
 		
 	
 			try {
-				listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga");
+				listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga LIMIT 5");
 				Escaparate.cerrarConexion();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -137,7 +139,7 @@ public class Mangadesk extends JFrame implements ActionListener  {
 				}else {
 					try {
 						Escaparate.abrirConexion();
-						listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga");
+						listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga LIMIT 5");
 						Escaparate.cerrarConexion();
 					} catch (SQLException | ClassNotFoundException e1) {
 						// TODO Auto-generated catch block
@@ -186,7 +188,48 @@ public class Mangadesk extends JFrame implements ActionListener  {
 			}//FIN ACTIONPERFORMED
 		});//aplicar //////////////////////////////////////////////
 		
-		//// REFRESCAR LISTA //////////////////////////////////////////////
+		//// BOTÓN SIGUIENTE
+		btnsiguiente.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				offset += 5;
+				try {
+					Escaparate.abrirConexion();
+					listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga LIMIT 5 OFFSET "+offset);
+					Escaparate.cerrarConexion();
+					muestraMangas(listaMangas);
+					panelMangas.revalidate();
+					panelMangas.repaint();
+					panelMangas.validate();
+				} catch (SQLException | ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});//fin boton situiente
+		
+		btnanterior.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				offset -= 5;
+				try {
+					Escaparate.abrirConexion();
+					listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga LIMIT 5 OFFSET "+offset);
+					Escaparate.cerrarConexion();
+					muestraMangas(listaMangas);
+					panelMangas.revalidate();
+					panelMangas.repaint();
+					panelMangas.validate();
+				} catch (SQLException | ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 
 	}//fin definir eventos
 
@@ -239,99 +282,114 @@ public class Mangadesk extends JFrame implements ActionListener  {
 		rdbtnmanhua.setBounds(6, 94, 81, 23);
 		panelCentral.add(rdbtnmanhua);
 		tipos.add(rdbtnmanga);tipos.add(rdbtnmanhua);tipos.add(rdbtnmanhwa);
-JPanel panel_1 = new JPanel();
-panel_1.setBorder(new TitledBorder(null, "G\u00E9neros", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-panel_1.setBounds(8, 240, 154, 338);
-contentPane.add(panel_1);
-GridBagLayout gbl_panel_1 = new GridBagLayout();
-gbl_panel_1.columnWidths = new int[]{0, 0};
-gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-gbl_panel_1.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-panel_1.setLayout(gbl_panel_1);
-chckbxaccion = new JCheckBox("Accion");
-GridBagConstraints gbc_chckbxaccion = new GridBagConstraints();
-gbc_chckbxaccion.anchor = GridBagConstraints.WEST;
-gbc_chckbxaccion.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxaccion.gridx = 0;
-gbc_chckbxaccion.gridy = 0;
-panel_1.add(chckbxaccion, gbc_chckbxaccion);
-chckbxdeportes = new JCheckBox("Deportes");
-chckbxdeportes.setHorizontalAlignment(SwingConstants.LEFT);
-GridBagConstraints gbc_chckbxdeportes = new GridBagConstraints();
-gbc_chckbxdeportes.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxdeportes.anchor = GridBagConstraints.WEST;
-gbc_chckbxdeportes.gridx = 0;
-gbc_chckbxdeportes.gridy = 1;
-panel_1.add(chckbxdeportes, gbc_chckbxdeportes);
-chckbxmagia = new JCheckBox("Magia");
-chckbxmagia.setHorizontalAlignment(SwingConstants.LEFT);
-GridBagConstraints gbc_chckbxmagia = new GridBagConstraints();
-gbc_chckbxmagia.anchor = GridBagConstraints.WEST;
-gbc_chckbxmagia.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxmagia.gridx = 0;
-gbc_chckbxmagia.gridy = 2;
-panel_1.add(chckbxmagia, gbc_chckbxmagia);
-chckbxromance = new JCheckBox("Romance");
-GridBagConstraints gbc_chckbxromance = new GridBagConstraints();
-gbc_chckbxromance.anchor = GridBagConstraints.WEST;
-gbc_chckbxromance.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxromance.gridx = 0;
-gbc_chckbxromance.gridy = 3;
-panel_1.add(chckbxromance, gbc_chckbxromance);
-chckbxisekai = new JCheckBox("Isekai");
-GridBagConstraints gbc_chckbxisekai = new GridBagConstraints();
-gbc_chckbxisekai.anchor = GridBagConstraints.WEST;
-gbc_chckbxisekai.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxisekai.gridx = 0;
-gbc_chckbxisekai.gridy = 4;
-panel_1.add(chckbxisekai, gbc_chckbxisekai);
-chckbxrecuentos = new JCheckBox("Recuentos de la vida");
-GridBagConstraints gbc_chckbxrecuentos = new GridBagConstraints();
-gbc_chckbxrecuentos.anchor = GridBagConstraints.WEST;
-gbc_chckbxrecuentos.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxrecuentos.gridx = 0;
-gbc_chckbxrecuentos.gridy = 5;
-panel_1.add(chckbxrecuentos, gbc_chckbxrecuentos);
-chckbxdrama = new JCheckBox("Drama");
-GridBagConstraints gbc_chckbxdrama = new GridBagConstraints();
-gbc_chckbxdrama.anchor = GridBagConstraints.WEST;
-gbc_chckbxdrama.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxdrama.gridx = 0;
-gbc_chckbxdrama.gridy = 6;
-panel_1.add(chckbxdrama, gbc_chckbxdrama);
-chckbxthriller = new JCheckBox("Thriller");
-GridBagConstraints gbc_chckbxthriller = new GridBagConstraints();
-gbc_chckbxthriller.anchor = GridBagConstraints.WEST;
-gbc_chckbxthriller.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxthriller.gridx = 0;
-gbc_chckbxthriller.gridy = 7;
-panel_1.add(chckbxthriller, gbc_chckbxthriller);
-chckbxsupervivencia = new JCheckBox("Supervivencia");
-GridBagConstraints gbc_chckbxsupervivencia = new GridBagConstraints();
-gbc_chckbxsupervivencia.anchor = GridBagConstraints.WEST;
-gbc_chckbxsupervivencia.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxsupervivencia.gridx = 0;
-gbc_chckbxsupervivencia.gridy = 8;
-panel_1.add(chckbxsupervivencia, gbc_chckbxsupervivencia);
-chckbxcrimen = new JCheckBox("Crimen");
-GridBagConstraints gbc_chckbxcrimen = new GridBagConstraints();
-gbc_chckbxcrimen.anchor = GridBagConstraints.WEST;
-gbc_chckbxcrimen.insets = new Insets(0, 0, 5, 0);
-gbc_chckbxcrimen.gridx = 0;
-gbc_chckbxcrimen.gridy = 9;
-panel_1.add(chckbxcrimen, gbc_chckbxcrimen);
-chckbxvidaescolar = new JCheckBox("Vida escolar");
-GridBagConstraints gbc_chckbxvidaescolar = new GridBagConstraints();
-gbc_chckbxvidaescolar.anchor = GridBagConstraints.WEST;
-gbc_chckbxvidaescolar.gridx = 0;
-gbc_chckbxvidaescolar.gridy = 10;
-panel_1.add(chckbxvidaescolar, gbc_chckbxvidaescolar);
-	checkBoxSeleccionados.add(chckbxcrimen);checkBoxSeleccionados.add(chckbxdeportes);checkBoxSeleccionados.add(chckbxisekai);
-	checkBoxSeleccionados.add(chckbxrecuentos);checkBoxSeleccionados.add(chckbxromance);checkBoxSeleccionados.add(chckbxsupervivencia);
-	checkBoxSeleccionados.add(chckbxthriller);checkBoxSeleccionados.add(chckbxvidaescolar);checkBoxSeleccionados.add(chckbxaccion);
-	checkBoxSeleccionados.add(chckbxdrama);checkBoxSeleccionados.add(chckbxmagia);
-	//---
+		grupoBotones.add(rdbtnmanga);grupoBotones.add(rdbtnmanhua);grupoBotones.add(rdbtnmanhwa);
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "G\u00E9neros", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_1.setBounds(8, 240, 154, 338);
+		contentPane.add(panel_1);
+		GridBagLayout gbl_panel_1 = new GridBagLayout();
+		gbl_panel_1.columnWidths = new int[] { 0, 0 };
+		gbl_panel_1.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panel_1.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
+		panel_1.setLayout(gbl_panel_1);
+		chckbxaccion = new JCheckBox("Accion");
+		GridBagConstraints gbc_chckbxaccion = new GridBagConstraints();
+		gbc_chckbxaccion.anchor = GridBagConstraints.WEST;
+		gbc_chckbxaccion.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxaccion.gridx = 0;
+		gbc_chckbxaccion.gridy = 0;
+		panel_1.add(chckbxaccion, gbc_chckbxaccion);
+		chckbxdeportes = new JCheckBox("Deportes");
+		chckbxdeportes.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_chckbxdeportes = new GridBagConstraints();
+		gbc_chckbxdeportes.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxdeportes.anchor = GridBagConstraints.WEST;
+		gbc_chckbxdeportes.gridx = 0;
+		gbc_chckbxdeportes.gridy = 1;
+		panel_1.add(chckbxdeportes, gbc_chckbxdeportes);
+		chckbxmagia = new JCheckBox("Magia");
+		chckbxmagia.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_chckbxmagia = new GridBagConstraints();
+		gbc_chckbxmagia.anchor = GridBagConstraints.WEST;
+		gbc_chckbxmagia.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxmagia.gridx = 0;
+		gbc_chckbxmagia.gridy = 2;
+		panel_1.add(chckbxmagia, gbc_chckbxmagia);
+		chckbxromance = new JCheckBox("Romance");
+		GridBagConstraints gbc_chckbxromance = new GridBagConstraints();
+		gbc_chckbxromance.anchor = GridBagConstraints.WEST;
+		gbc_chckbxromance.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxromance.gridx = 0;
+		gbc_chckbxromance.gridy = 3;
+		panel_1.add(chckbxromance, gbc_chckbxromance);
+		chckbxisekai = new JCheckBox("Isekai");
+		GridBagConstraints gbc_chckbxisekai = new GridBagConstraints();
+		gbc_chckbxisekai.anchor = GridBagConstraints.WEST;
+		gbc_chckbxisekai.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxisekai.gridx = 0;
+		gbc_chckbxisekai.gridy = 4;
+		panel_1.add(chckbxisekai, gbc_chckbxisekai);
+		chckbxrecuentos = new JCheckBox("Recuentos de la vida");
+		GridBagConstraints gbc_chckbxrecuentos = new GridBagConstraints();
+		gbc_chckbxrecuentos.anchor = GridBagConstraints.WEST;
+		gbc_chckbxrecuentos.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxrecuentos.gridx = 0;
+		gbc_chckbxrecuentos.gridy = 5;
+		panel_1.add(chckbxrecuentos, gbc_chckbxrecuentos);
+		chckbxdrama = new JCheckBox("Drama");
+		GridBagConstraints gbc_chckbxdrama = new GridBagConstraints();
+		gbc_chckbxdrama.anchor = GridBagConstraints.WEST;
+		gbc_chckbxdrama.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxdrama.gridx = 0;
+		gbc_chckbxdrama.gridy = 6;
+		panel_1.add(chckbxdrama, gbc_chckbxdrama);
+		chckbxthriller = new JCheckBox("Thriller");
+		GridBagConstraints gbc_chckbxthriller = new GridBagConstraints();
+		gbc_chckbxthriller.anchor = GridBagConstraints.WEST;
+		gbc_chckbxthriller.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxthriller.gridx = 0;
+		gbc_chckbxthriller.gridy = 7;
+		panel_1.add(chckbxthriller, gbc_chckbxthriller);
+		chckbxsupervivencia = new JCheckBox("Supervivencia");
+		GridBagConstraints gbc_chckbxsupervivencia = new GridBagConstraints();
+		gbc_chckbxsupervivencia.anchor = GridBagConstraints.WEST;
+		gbc_chckbxsupervivencia.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxsupervivencia.gridx = 0;
+		gbc_chckbxsupervivencia.gridy = 8;
+		panel_1.add(chckbxsupervivencia, gbc_chckbxsupervivencia);
+		chckbxcrimen = new JCheckBox("Crimen");
+		GridBagConstraints gbc_chckbxcrimen = new GridBagConstraints();
+		gbc_chckbxcrimen.anchor = GridBagConstraints.WEST;
+		gbc_chckbxcrimen.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxcrimen.gridx = 0;
+		gbc_chckbxcrimen.gridy = 9;
+		panel_1.add(chckbxcrimen, gbc_chckbxcrimen);
+		chckbxvidaescolar = new JCheckBox("Vida escolar");
+		GridBagConstraints gbc_chckbxvidaescolar = new GridBagConstraints();
+		gbc_chckbxvidaescolar.anchor = GridBagConstraints.WEST;
+		gbc_chckbxvidaescolar.gridx = 0;
+		gbc_chckbxvidaescolar.gridy = 10;
+		panel_1.add(chckbxvidaescolar, gbc_chckbxvidaescolar);
+		checkBoxSeleccionados.add(chckbxcrimen);
+		checkBoxSeleccionados.add(chckbxdeportes);
+		checkBoxSeleccionados.add(chckbxisekai);
+		checkBoxSeleccionados.add(chckbxrecuentos);
+		checkBoxSeleccionados.add(chckbxromance);
+		checkBoxSeleccionados.add(chckbxsupervivencia);
+		checkBoxSeleccionados.add(chckbxthriller);
+		checkBoxSeleccionados.add(chckbxvidaescolar);
+		checkBoxSeleccionados.add(chckbxaccion);
+		checkBoxSeleccionados.add(chckbxdrama);
+		checkBoxSeleccionados.add(chckbxmagia);
+		btnanterior = new JButton("Anterior");
+		btnanterior.setBounds(482, 606, 89, 52);
+		contentPane.add(btnanterior);
+		btnsiguiente = new JButton("Siguiente");
+		btnsiguiente.setBounds(612, 606, 89, 52);
+		contentPane.add(btnsiguiente);
+		// ---
 	
 	
 	
@@ -363,30 +421,33 @@ panel_1.add(chckbxvidaescolar, gbc_chckbxvidaescolar);
 
 	
 		//FOR IMAGENES DEL OBJETO MANGA
+		int limite = 0;
 		for (int i = 0; i < listaMangas.size(); i++) {
 			
-			ImageIcon imagen = new ImageIcon(listaMangas.get(i).getImagen());
-			Image ImagenBien = imagen.getImage();
-			Image newimg = ImagenBien.getScaledInstance(200, 250, java.awt.Image.SCALE_SMOOTH);
-			imagen = new ImageIcon(newimg);
-			//fin imagen
+				ImageIcon imagen = new ImageIcon(listaMangas.get(i).getImagen());
+				Image ImagenBien = imagen.getImage();
+				Image newimg = ImagenBien.getScaledInstance(200, 250, java.awt.Image.SCALE_SMOOTH);
+				imagen = new ImageIcon(newimg);
+				//fin imagen
+				
+				
+				mangaBoton = new JButton(imagen);
+				mangaBoton.setOpaque(false);
+				mangaBoton.setForeground(Color.white);
+				mangaBoton.setBorderPainted(false);
+				mangaBoton.setFocusPainted(false);
+				mangaBoton.setContentAreaFilled(false);
+				mangaBoton.putClientProperty("libro", listaMangas.get(i));
+				panelMangas.add(mangaBoton);
+				
+				mangaBoton.addActionListener(this);
+				
+				
+				panelMangas.revalidate();
+				panelMangas.repaint();
+				panelMangas.validate();
+				
 			
-			
-			mangaBoton = new JButton(imagen);
-			mangaBoton.setOpaque(false);
-			mangaBoton.setForeground(Color.white);
-			mangaBoton.setBorderPainted(false);
-			mangaBoton.setFocusPainted(false);
-			mangaBoton.setContentAreaFilled(false);
-			mangaBoton.putClientProperty("libro", listaMangas.get(i));
-			panelMangas.add(mangaBoton);
-			
-			mangaBoton.addActionListener(this);
-			
-			
-			panelMangas.revalidate();
-			panelMangas.repaint();
-			panelMangas.validate();
 			
 		}//FIN DEL FOR
 		
