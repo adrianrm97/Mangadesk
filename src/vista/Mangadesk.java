@@ -82,6 +82,8 @@ public class Mangadesk extends JFrame implements ActionListener  {
 	private JButton btnanterior;
 	private JButton btnsiguiente;
 	private int offset = 0;
+	private int siguientes = 0;
+	private int retrocesos = 0;
 	/**
 	 * Create the frame.
 	 */
@@ -183,7 +185,19 @@ public class Mangadesk extends JFrame implements ActionListener  {
 						generos += ", ";
 					}
 				}
-				mangasFiltrados = Escaparate.muestraFiltrados(tipo,generos);
+				
+				try {
+					Escaparate.abrirConexion();
+					listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga WHERE tipo like '%"+tipo+"%' limit 5");
+					muestraMangas(listaMangas);
+					panelMangas.revalidate();
+					panelMangas.repaint();
+					panelMangas.validate();
+					Escaparate.cerrarConexion();
+				} catch (SQLException | ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 			}//FIN ACTIONPERFORMED
 		});//aplicar //////////////////////////////////////////////
@@ -194,19 +208,30 @@ public class Mangadesk extends JFrame implements ActionListener  {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				offset += 5;
-				try {
-					Escaparate.abrirConexion();
-					listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga LIMIT 5 OFFSET "+offset);
-					Escaparate.cerrarConexion();
-					muestraMangas(listaMangas);
-					panelMangas.revalidate();
-					panelMangas.repaint();
-					panelMangas.validate();
-				} catch (SQLException | ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				
+				if (masDe5()) {
+					offset += 5;
+					siguientes++;
+					retrocesos--;
+					try {
+						Escaparate.abrirConexion();
+						listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga LIMIT 5 OFFSET "+offset);
+						System.out.println(listaMangas.size());
+						Escaparate.cerrarConexion();
+						if (listaMangas.size()>=1) {
+						muestraMangas(listaMangas);
+						
+							panelMangas.revalidate();
+							panelMangas.repaint();
+							panelMangas.validate();
+						}
+						
+					} catch (SQLException | ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
+				
 			}
 		});//fin boton situiente
 		
@@ -215,23 +240,50 @@ public class Mangadesk extends JFrame implements ActionListener  {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				if (siguientes>=1) {
+					
+				
 				offset -= 5;
-				try {
-					Escaparate.abrirConexion();
-					listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga LIMIT 5 OFFSET "+offset);
-					Escaparate.cerrarConexion();
-					muestraMangas(listaMangas);
-					panelMangas.revalidate();
-					panelMangas.repaint();
-					panelMangas.validate();
-				} catch (SQLException | ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				retrocesos++;
+				siguientes--;
+				
+					try {
+						Escaparate.abrirConexion();
+						listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga LIMIT 5 OFFSET "+offset);
+						Escaparate.cerrarConexion();
+						muestraMangas(listaMangas);
+						panelMangas.revalidate();
+						panelMangas.repaint();
+						panelMangas.validate();
+					} catch (SQLException | ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				
 				}
 			}
 		});
 
 	}//fin definir eventos
+
+	
+
+	protected boolean masDe5() {
+		// TODO Auto-generated method stub
+	
+		try {
+			Escaparate.abrirConexion();
+			listaMangas = Escaparate.consultaMangasPst("SELECT * FROM manga LIMIT 5 OFFSET "+offset);
+			Escaparate.cerrarConexion();
+		} catch (SQLException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (listaMangas.size()>0) {
+			return true;
+		}
+		return false;
+	}
 
 	private void definirVentana() {
 		// TODO Auto-generated method stub
